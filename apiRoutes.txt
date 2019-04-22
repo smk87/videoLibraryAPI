@@ -1,3 +1,4 @@
 /api/users , POST , Create a user
 /api/users/8 , GET, Read a user
 /api/users , GET, Read all users
+/api/users/4 , PUT, Update a user
