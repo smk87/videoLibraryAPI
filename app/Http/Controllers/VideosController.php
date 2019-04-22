@@ -3,15 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Exception;
+use App\Video;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\Video as VideoResource;
 
-use Validator;
-use App\User;
-use App\Http\Resources\User as UserResource;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Validation\Rule;
-
-class UsersController extends Controller
+class VideosController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,7 +16,7 @@ class UsersController extends Controller
      */
     public function index()
     {
-        return UserResource::collection(User::all()); // Returns all the users from DB
+        return VideoResource::collection(Video::with(['likes', 'comments'])->get()); // Return all the videos in the library
     }
 
     /**
@@ -33,20 +29,21 @@ class UsersController extends Controller
     {
         // Validation with custom response
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'email' => 'required|email|unique:users'
+            'title' => 'required',
+            'url' => 'required'
         ]);
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->messages()->all()], 400); // Returns validation error as JSON
         } else {
             // Assign and save to DB
-            $user = User::create([
-                'name' => $request->name,
-                'photoUrl' => $request->photoUrl,
-                'email' => $request->email
+            $video = Video::create([
+                'title' => $request->title,
+                'url' => $request->url,
+                'description' => $request->description,
+                'thumbnailUrl' => $request->thumbnailUrl,
             ]);
 
-            return new UserResource($user); //  Returns new created user
+            return new VideoResource($video); //  Returns new created video
         }
     }
 
@@ -58,10 +55,10 @@ class UsersController extends Controller
      */
     public function show($id)
     {
-        if (User::find($id)) {
-            return new UserResource(User::find($id)); // Returns a specific user by id from DB
+        if (Video::find($id)) {
+            return new VideoResource(Video::find($id)); // Returns a specific video by id from DB
         } else {
-            return response()->json(['error' => 'User does not exist.'], 404); // Returns error when user doesn't exist
+            return response()->json(['error' => 'Video does not exist.'], 404); // Returns error when video doesn't exist
         }
     }
 
@@ -76,22 +73,23 @@ class UsersController extends Controller
     {
         // Validation with custom response
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'email' => ['required', 'email', Rule::unique('users')->ignore($id)]
+            'title' => 'required',
+            'url' => 'required'
         ]);
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->messages()->all()], 400); // Returns validation error as JSON
-        } else if (User::find($id)) {
+        } else if (Video::find($id)) {
             // Update and save to DB
-            User::find($id)->update([
-                'name' => $request->name,
-                'photoUrl' => $request->photoUrl,
-                'email' => $request->email
+            Video::find($id)->update([
+                'title' => $request->title,
+                'url' => $request->url,
+                'description' => $request->description,
+                'thumbnailUrl' => $request->thumbnailUrl
             ]);
-            return new UserResource(User::find($id)); //  Returns new updated user
+            return new VideoResource(Video::find($id)); //  Returns new updated video
 
         } else {
-            return response()->json(['error' => 'User does not exist.'], 404); // Returns error when user doesn't exist
+            return response()->json(['error' => 'Video does not exist.'], 404); // Returns error when video doesn't exist
         }
     }
 
@@ -103,10 +101,10 @@ class UsersController extends Controller
      */
     public function destroy($id)
     {
-        if (User::destroy($id)) {
-            return response()->json(['success' => true, 'message' => 'User deleted successfully.'], 200); // Returns success on user delete
+        if (Video::destroy($id)) {
+            return response()->json(['success' => true, 'message' => 'Video deleted successfully.'], 200); // Returns success on video delete
         } else {
-            return response()->json(['error' => 'User does not exist.'], 404); // Returns error when user doesn't exist
+            return response()->json(['error' => 'Video does not exist.'], 404); // Returns error when video doesn't exist
         }
     }
 }

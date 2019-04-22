@@ -16,6 +16,7 @@ class CreateLikesTable extends Migration
         Schema::create('likes', function (Blueprint $table) {
             $table->Increments('id')->unique();
             $table->unsignedInteger('user_id'); // The user who liked
+            $table->unsignedInteger('video_id'); // The video which is liked
             $table->boolean('like'); // Liked the video or not
             $table->timestamps();
         });

@@ -1,4 +1,11 @@
 /api/users , POST , Create a user
-/api/users/8 , GET, Read a user
 /api/users , GET, Read all users
-/api/users/4 , PUT, Update a user
+/api/users/{id} , GET, Read a user
+/api/users/{id} , PUT, Update a user
+/api/users/{id} , DELETE, Delete a user
+
+/api/videos , POST , Create a video
+/api/videos , GET , Read all video
+/api/videos/{id} , GET , Read a video
+/api/videos/{id} , PUT , Update a video
+/api/videos/{id} , DELETE , Delete a video

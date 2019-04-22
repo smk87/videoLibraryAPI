@@ -19,4 +19,6 @@ use Illuminate\Http\Request;
 // });
 
 
-Route::apiResource('users', 'UsersController');
+Route::apiResource('users', 'UsersController'); // API routes for User
+
+Route::apiResource('videos', 'VideosController'); // API routes for Video

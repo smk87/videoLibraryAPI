@@ -19,8 +19,6 @@ class CreateVideosTable extends Migration
             $table->string('url');
             $table->string('description');
             $table->string('thumbnailUrl');
-            $table->unsignedInteger('like_id'); // Likes on a video
-            $table->unsignedInteger('comment_id'); // Comments on a video
             $table->timestamps();
         });
     }
