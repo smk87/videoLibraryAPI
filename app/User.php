@@ -16,8 +16,18 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'photoUrl', 'email',
     ];
+
+    public function likes()
+    {
+        return $this->hasMany(Like::class); // A user can like many.
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class); // A user can comment many.
+    }
 
     /**
      * The attributes that should be hidden for arrays.
