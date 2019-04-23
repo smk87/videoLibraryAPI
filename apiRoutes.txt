@@ -9,3 +9,8 @@
 /api/videos/{id} , GET , Read a video
 /api/videos/{id} , PUT , Update a video
 /api/videos/{id} , DELETE , Delete a video
+
+/api/videos/{id}/like , POST , Like/Unlike a video
+/api/videos/{id}/likes/count , GET , Read like count of a video
+/api/videos/likes/count , GET , Read like count of a video
+
