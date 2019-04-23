@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+
 // use Symfony\Component\Routing\Annotation\Route;
 
 /*
@@ -22,3 +23,7 @@ use Illuminate\Http\Request;
 Route::apiResource('users', 'UsersController'); // API routes for User
 
 Route::apiResource('videos', 'VideosController'); // API routes for Video
+
+Route::group(['prefix' => 'videos'], function () {
+    Route::post('{video}/like', 'LikesController@store')->name('likeUnlike'); // API routes for liking/unliking a video
+});
