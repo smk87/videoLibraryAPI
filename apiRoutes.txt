@@ -10,6 +10,10 @@
 /api/videos/{id} , PUT , Update a video
 /api/videos/{id} , DELETE , Delete a video
 
+/api/videos?sortBy=name , GET , Fetch all videos ordered by title name
+/api/videos?sortBy=like count , GET , Fetch all videos ordered by total likes on a video
+/api/videos?sortBy=updated time , GET , Fetch all videos ordered by title update time
+
 /api/videos/{id}/like , POST , Like/Unlike a video
 /api/videos/{id}/likes/count , GET , Read like count of a video
 /api/videos/likes/count , GET , Read like count of all the video

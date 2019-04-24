@@ -21,11 +21,15 @@ class VideosController extends Controller
         if (isset($_GET['sortBy'])) {
             switch ($_GET['sortBy']) {
                 case 'name':
-                    return VideoResource::collection(Video::orderBy('title')->get());
+                    return VideoResource::collection(Video::orderBy('title')->get()); // Return all the videos in the library ordered by title
                     break;
 
-                case 'updatedTime':
-                    return VideoResource::collection(Video::orderBy('updated_at')->get());
+                case 'like count':
+                    return VideoResource::collection(Video::orderBy('totalLikes', 'DESC')->get()); // Return all the videos in the library ordered by total likes
+                    break;
+
+                case 'updated time':
+                    return VideoResource::collection(Video::orderBy('updated_at', 'DESC')->get()); // Return all the videos in the library ordered by update time
                     break;
 
                 default:

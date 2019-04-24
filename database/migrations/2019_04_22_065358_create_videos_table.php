@@ -20,6 +20,7 @@ class CreateVideosTable extends Migration
             $table->string('description');
             $table->string('thumbnailUrl');
             $table->timestamps();
+            $table->integer('totalLikes')->default(0);
         });
     }
 

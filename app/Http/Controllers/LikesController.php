@@ -19,20 +19,12 @@ class LikesController extends Controller
     public function index()
     {
         $videos = Video::all();
-        $likeCount = 0;
 
-        if ($videos) {
+        if (count($videos) != 0) {
             $allLikes = [];
-            foreach ($videos as  $video) {
-                $likeList = [];
-                foreach ($video->likes as $i) {
-                    if ($i->like) {
-                        $likeCount += 1; // Counting like for a specific video
-                    }
-                }
-                $likeList =  ['id' => $video->id, 'title' => $video->title, 'url' => $video->url, 'totalLike' => $likeCount];
+            foreach ($videos as $video) {
+                $likeList =  ['id' => $video->id, 'title' => $video->title, 'url' => $video->url, 'totalLike' => $video->totalLikes];
                 array_push($allLikes, $likeList); // Pushing all the video's like data into one array
-                $likeCount = 0;
             }
             return response()->json($allLikes, 200); // Return all video's total like count
         } else {
@@ -63,6 +55,11 @@ class LikesController extends Controller
                     'video_id' => $id,
                     'like' => true
                 ]);
+                $video = Video::find($id);
+                $video->timestamps = false;
+                $video->increment('totalLikes'); // Increase the like counter for this video
+                $video->save(); // Save to DB
+
                 return new LikeResource($like);
             } else {
                 // Change like to true or false
@@ -70,11 +67,21 @@ class LikesController extends Controller
                     Like::find($like[0]->id)->update([
                         'like' => false // Unlike the video
                     ]);
+                    $video = Video::find($id);
+                    $video->timestamps = false;
+                    $video->decrement('totalLikes'); // Decrease the like counter for this video
+                    $video->save(); // Save to DB
+
                     return response()->json(['like' => false, 'messages' => 'You have unliked the video.'], 200);
                 } else {
                     Like::find($like[0]->id)->update([
                         'like' => true // Like the video again
                     ]);
+                    $video = Video::find($id);
+                    $video->timestamps = false;
+                    $video->increment('totalLikes'); // Increase the like counter for this video
+                    $video->save(); // Save to DB
+
                     return response()->json(['like' => true, 'messages' => 'You have liked the video.'], 200);
                 }
             }
