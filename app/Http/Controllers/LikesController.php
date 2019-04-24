@@ -23,7 +23,7 @@ class LikesController extends Controller
 
         if ($videos) {
             $allLikes = [];
-            foreach ($videos as $key => $video) {
+            foreach ($videos as  $video) {
                 $likeList = [];
                 foreach ($video->likes as $i) {
                     if ($i->like) {
@@ -57,11 +57,12 @@ class LikesController extends Controller
         } else if (Video::find($id)) {
             $like = Like::where([['video_id', '=', $id], ['user_id', '=', $request->user]])->get();
             if (count($like) == 0) {
+                // Like the video
                 $like = Like::create([
                     'user_id' => $request->user,
                     'video_id' => $id,
                     'like' => true
-                ]); // Like the video
+                ]);
                 return new LikeResource($like);
             } else {
                 // Change like to true or false
@@ -103,28 +104,5 @@ class LikesController extends Controller
         } else {
             return response()->json(['error' => 'Video does not exist.'], 404); // Returns error when video doesn't exist
         }
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 }

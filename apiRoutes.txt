@@ -12,5 +12,7 @@
 
 /api/videos/{id}/like , POST , Like/Unlike a video
 /api/videos/{id}/likes/count , GET , Read like count of a video
-/api/videos/likes/count , GET , Read like count of a video
+/api/videos/likes/count , GET , Read like count of all the video
+
+/api/videos/{id}/comment , POST , Comment on a video
 

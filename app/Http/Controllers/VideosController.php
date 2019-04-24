@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Video;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\Video as VideoResource;
+use Mockery\Undefined;
 
 class VideosController extends Controller
 {
@@ -16,7 +17,24 @@ class VideosController extends Controller
      */
     public function index()
     {
-        return VideoResource::collection(Video::with(['likes', 'comments'])->get()); // Return all the videos in the library
+        // Check for sorting parameter
+        if (isset($_GET['sortBy'])) {
+            switch ($_GET['sortBy']) {
+                case 'name':
+                    return VideoResource::collection(Video::orderBy('title')->get());
+                    break;
+
+                case 'updatedTime':
+                    return VideoResource::collection(Video::orderBy('updated_at')->get());
+                    break;
+
+                default:
+                    return VideoResource::collection(Video::all()); // Return all the videos in the library
+                    break;
+            }
+        } else {
+            return VideoResource::collection(Video::all()); // Return all the videos in the library
+        }
     }
 
     /**
