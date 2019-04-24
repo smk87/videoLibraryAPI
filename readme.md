@@ -49,8 +49,7 @@ All the endpoint of this REST API is created with Laravel. It takes JSON data as
  -  **/api/videos?sortBy=like count , GET , Fetch all videos ordered by
    total likes on a video**
    
-  - **/api/videos?sortBy=updated time , GET , Fetch all videos ordered by
-   title update time**
+  - **/api/videos?sortBy=updated time , GET , Fetch all videos ordered by update time**
    
      
    
