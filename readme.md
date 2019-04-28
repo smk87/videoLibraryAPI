@@ -25,6 +25,8 @@ All the endpoint of this REST API is created with Laravel. It takes JSON data as
     "url": "asdad",
     "description": "asdasdad",
     "thumbnailUrl": "ebnbsasda"
+}` Or,  `{
+    "url": "https://vimeo.com/94809867" // To create a video with video from vimeo
 }`
    
   - **/api/videos , GET , Read all video**
