@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Video;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\Video as VideoResource;
-use Mockery\Undefined;
+use Vimeo\Laravel\Facades\Vimeo;
 
 class VideosController extends Controller
 {
@@ -51,21 +51,34 @@ class VideosController extends Controller
     {
         // Validation with custom response
         $validator = Validator::make($request->all(), [
-            'title' => 'required',
             'url' => 'required'
         ]);
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->messages()->all()], 400); // Returns validation error as JSON
         } else {
-            // Assign and save to DB
-            $video = Video::create([
-                'title' => $request->title,
-                'url' => $request->url,
-                'description' => $request->description,
-                'thumbnailUrl' => $request->thumbnailUrl,
-            ]);
+            // Check for vimeo video
+            $vimeoID = substr($request->url, 18);
+            $vimeo =  Vimeo::request('/videos/' . $vimeoID, ['per_page' => 10], 'GET');
 
-            return new VideoResource($video); //  Returns new created video
+            if (isset($vimeo['body']['error'])) {
+                // Assign and save video to DB normally
+                $video = Video::create([
+                    'title' => ($request->title ? $request->title : "unnamed"),
+                    'url' => $request->url,
+                    'description' => $request->description,
+                    'thumbnailUrl' => $request->thumbnailUrl,
+                ]);
+                return new VideoResource($video); //  Returns new created video                
+            } else {
+                // Assign and save vimeo video to DB
+                $video = Video::create([
+                    'title' => $vimeo['body']['name'],
+                    'url' => $request->url,
+                    'description' => $vimeo['body']['description'],
+                    'thumbnailUrl' => $vimeo['body']['pictures']['sizes'][2]['link'],
+                ]);
+                return new VideoResource($video); //  Returns new created video from vimeo
+            }
         }
     }
 
